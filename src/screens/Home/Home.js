@@ -1,4 +1,11 @@
-import { Component } from "react";
+import React,{ Component } from 'react';
+import "./Home.css";
+import AppLogo from "../../assets/logo.svg";
+import Languages from "../../assets/languages.json";
+import Countries from "../../assets/countries.json";
+import {getFilterNews, getLatestNews, dateString } from "../../utils/helper";
+import NewsItem from "../../components/NewsItem";
+
 
 class HomseScreen extends Component{
     constructor(props)
@@ -100,7 +107,7 @@ class HomseScreen extends Component{
                                         }>
                                             <option value="" disabled hidden>Select</option>
                                             {
-                                                Language.map(lang=>
+                                                Languages.map(lang=>
                                                     {
                                                         return(
                                                             <option value={
@@ -134,13 +141,92 @@ class HomseScreen extends Component{
                                             }
                                         </select>
                                     </div>
+                                    <div className="col filter-box">
+                                        <span className="input-label">Start Date</span>
+                                        <input type="date" name="startDate" className="filter-input" placeholder=" Start Date" 
+                                        value={state.startDate} onChange={this.handleInputFromDate}/>
+                                    </div>
+                                    <div className="col filter-box">
+                                        <span className="input-label">End Date</span>
+                                        <input type="date" name="endDate" className="filter-input" placeholder="End Date" 
+                                        value={state.endDate} 
+                                        min={
+                                            state.startDate==="" ?null:dateString(state.startDate)
+                                        }
+                                        onChange={
+                                            event=>this.setState(
+                                                {
+                                                    endDate:event.nativeEvent.target.value
+                                                }
+                                            )}/>
+                                    </div>
+                                    <button className="filter-btn" onClick={this.handleFilterNews}
+                                    disabled={
+                                        state.startDate===""&&
+                                        state.language===""&&
+                                        state.country===""&&
+                                        state.endDate===""
+                                    }>
+                                        <span>Show News</span>
+                                    </button>
                                 </div>
+                            </div>
+                            <div className={
+                                `col news-view ${state.news===null ||(state.news!==null&&state.news.length===0):"view"}`
+                            }
+
+                            >
+                                {
+                                    state.news==null
+                                    ?
+                                    <div className="col flex-center" style={{flex:1}}>
+                                        <div className="activity-indicator"></div>
+                                        <div className="indicator-text">{
+                                            state.loadingText
+                                        }
+                                        </div>
+                                        </div>
+                                        :
+                                        (state.news !==null &&state.news.length===0)?
+                                        <div className="col flex-center" style={{flex:1}}>
+                                        <div className="indicator-text">{
+                                            state.errorText
+                                        }
+                                        </div>
+                                        </div>
+                                        :
+                                        <div className="col">
+                                            {
+                                                state.news.map((newsItem,index)=>
+                                                {
+                                                    return(
+                                                        <NewsItem
+                                                        key={index}
+                                                        index={index}
+                                                        url={newsItem.url}
+                                                        title={newsItem.title}
+                                                        image={newsItem.image}
+                                                        author={newsItem.author}
+                                                        language={newsItem.language}
+                                                        published={newsItem.published}
+                                                        description={newsItem.description}
+                                                        onClose={
+                                                            (
+
+                                                            )=>
+                                                            this.handleNewsClosed(index)
+                                                        }/>
+                                                    )
+                                                })
+                                            }
+                                            </div>
+                                }
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        )
+            
+        );
     }
 }
 export default HomseScreen;
