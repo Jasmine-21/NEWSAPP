@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import {BrowseRouter as Router } from 'react-router-dom';
-import {library} from '@fortawesome/fontawesome-svgc-core';
+import {BrowserRouter as Router, Route } from 'react-router-dom';
+import {library} from '@fortawesome/fontawesome-svg-core';
 import {faIgloo} from '@fortawesome/free-solid-svg-icons';
-import Home from '../scrrens/Home/Home'
+import Home from '../scrrens/Home/Home';
  library.add(faIgloo)
 
  class AppRouter extends Component
